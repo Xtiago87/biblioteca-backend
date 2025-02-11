@@ -14,8 +14,9 @@ data class Livro(
 
     val titulo: String = "",
     val autor: String = "",
-    val categoria: String = ""
+    val categoria: String = "",
+    val emprestado: Boolean = false
 ) {
 
-    constructor() : this(0, "", "", "")
+    constructor() : this(0, "", "", "", false)
 }

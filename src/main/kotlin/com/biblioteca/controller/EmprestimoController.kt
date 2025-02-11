@@ -18,10 +18,25 @@ class EmprestimoController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun criarEmprestimo(@RequestParam usuarioId: Long, @RequestParam livroId: Long): Emprestimo {
-        val usuario = usuarioRepository.findById(usuarioId).orElseThrow { IllegalArgumentException("Usuário não encontrado") }
         val livro = livroRepository.findById(livroId).orElseThrow { IllegalArgumentException("Livro não encontrado") }
 
-        val emprestimo = Emprestimo(usuario = usuario, livro = livro)
+        if(livro.emprestado){
+            throw IllegalArgumentException("Livro já emprestado!")
+        }
+
+        val updatedLivro = livro.copy(
+            titulo = livro.titulo,
+            autor = livro.autor,
+            categoria = livro.categoria,
+            emprestado = true
+        )
+
+        livroRepository.save(updatedLivro)
+
+        val usuario = usuarioRepository.findById(usuarioId).orElseThrow { IllegalArgumentException("Usuário não encontrado") }
+
+
+        val emprestimo = Emprestimo(usuario = usuario, livro = updatedLivro)
         return emprestimoRepository.save(emprestimo)
     }
 
