@@ -50,6 +50,16 @@ class EmprestimoController(
         val emprestimo = emprestimoRepository.findById(id).orElseThrow { IllegalArgumentException("Empréstimo não encontrado") }
         val dataDevolucao = java.time.LocalDate.now()
 
+        val livro = livroRepository.findById(emprestimo.livro.id).orElseThrow { IllegalArgumentException("Livro não encontrado") }
+        val updatedLivro = livro.copy(
+            titulo = livro.titulo,
+            autor = livro.autor,
+            categoria = livro.categoria,
+            emprestado = false
+        )
+
+        livroRepository.save(updatedLivro)
+
         val emprestimoAtualizado = emprestimo.copy(status = "Finalizado", dataDevolucao = dataDevolucao)
         return emprestimoRepository.save(emprestimoAtualizado)
     }
