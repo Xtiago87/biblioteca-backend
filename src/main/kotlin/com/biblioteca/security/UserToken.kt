@@ -16,5 +16,5 @@ data class UserToken(
     )
 
     @get:JsonIgnore
-    val isAdmin: Boolean get() = roles == 0
+    val isAdmin: Boolean get() = roles == 1
 }

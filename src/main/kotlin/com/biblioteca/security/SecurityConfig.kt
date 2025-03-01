@@ -46,6 +46,7 @@ class SecurityConfig(
                     .requestMatchers(antMatcher(HttpMethod.POST, "/usuarios")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.POST, "/usuarios/login")).permitAll()
                     .requestMatchers(antMatcher("h2-console/**")).permitAll()
+                    .requestMatchers(antMatcher(HttpMethod.DELETE, "/**")).hasRole("LIBRARIAN")
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtTokenFilter, BasicAuthenticationFilter::class.java)

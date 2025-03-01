@@ -61,8 +61,8 @@ class JWT(private val properties: JwtProperties) {
         private fun utcNow() = ZonedDateTime.now(ZoneOffset.UTC)
         private fun ZonedDateTime.toDate(): Date = Date.from(this.toInstant())
         private fun UserToken.toAuthentication(): Authentication {
-            val authorities = listOf(SimpleGrantedAuthority("ROLE_$roles"))
-            return UsernamePasswordAuthenticationToken(this, id, authorities)
+            val authorities = listOf(SimpleGrantedAuthority("ROLE_${if (roles == 1) "LIBRARIAN" else "USER"}"))
+            return UsernamePasswordAuthenticationToken(this, null, authorities)
         }
     }
 }
