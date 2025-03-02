@@ -25,6 +25,15 @@ class JwtTokenFilter(private val jwt: JWT): GenericFilterBean() {
                 return
             }
         }
+
+        if (request.method == "PUT") {
+            val user = auth?.principal as? UserToken
+            if (user?.roles != 1) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Operação não permitida.")
+                return
+            }
+        }
+
         chain.doFilter(req, res)
     }
 
