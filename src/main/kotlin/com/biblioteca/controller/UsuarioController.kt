@@ -6,6 +6,7 @@ import com.biblioteca.repository.UsuarioRepository
 import com.biblioteca.security.JWT
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 
@@ -23,11 +24,13 @@ class UsuarioController(
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     fun listarUsuarios(): List<Usuario> {
         return usuarioRepository.findAll()
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     fun buscarUsuario(@PathVariable id: Long): Usuario {
         return usuarioRepository.findById(id).orElseThrow { IllegalArgumentException("Usuário não encontrado") }
     }
