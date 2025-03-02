@@ -14,7 +14,13 @@ data class Usuario(
     val nome: String = "",
 
     @Column(unique = true)
-    val email: String = ""
+    val email: String = "",
+
+    val password: String = "",
+
+    // 0 == usuario normal
+    // 1 == bibliotecario
+    val userRole : Int = 0
 ) {
-    constructor() : this(0, "", "")
+    constructor() : this(0, "", "","", 0)
 }

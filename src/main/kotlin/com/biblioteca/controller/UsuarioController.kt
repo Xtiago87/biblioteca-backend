@@ -1,14 +1,20 @@
 package com.biblioteca.controller
 
+import br.pucpr.authserver.users.controller.requests.LoginRequest
 import com.biblioteca.model.Usuario
 import com.biblioteca.repository.UsuarioRepository
+import com.biblioteca.security.JWT
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/usuarios")
 class UsuarioController(
-    private val usuarioRepository: UsuarioRepository
+    private val usuarioRepository: UsuarioRepository,
+    private val jwt: JWT
 ) {
 
     @PostMapping
@@ -18,11 +24,13 @@ class UsuarioController(
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     fun listarUsuarios(): List<Usuario> {
         return usuarioRepository.findAll()
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     fun buscarUsuario(@PathVariable id: Long): Usuario {
         return usuarioRepository.findById(id).orElseThrow { IllegalArgumentException("Usuário não encontrado") }
     }
@@ -33,4 +41,21 @@ class UsuarioController(
         val usuario = usuarioRepository.findById(id).orElseThrow { IllegalArgumentException("Usuário não encontrado") }
         usuarioRepository.delete(usuario)
     }
+
+    @PostMapping("/login")
+    fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<Any> {
+        val usuario = usuarioRepository.findByEmail(loginRequest.email)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(" ou senha inválidos")
+
+        System.out.println(loginRequest.password)
+        System.out.println(usuario.password)
+
+        if (loginRequest.password != usuario.password) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos")
+        }
+
+        val token = jwt.createToken(usuario)
+        return ResponseEntity.ok(mapOf("token" to token))
+    }
+
 }
