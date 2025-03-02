@@ -3,5 +3,5 @@
 - Erick Lima  
 
 ## Vídeos
-- [Vídeo Tiago](#)
+- [Vídeo Tiago](#https://youtu.be/OzO9Ochx2OQ)
 - [Vídeo Erick](#)
