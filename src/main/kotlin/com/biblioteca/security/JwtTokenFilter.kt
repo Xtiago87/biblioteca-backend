@@ -25,7 +25,6 @@ class JwtTokenFilter(private val jwt: JWT): GenericFilterBean() {
                 return
             }
         }
-
         chain.doFilter(req, res)
     }
 

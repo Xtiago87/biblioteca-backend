@@ -43,6 +43,10 @@ class SecurityConfig(
             .authorizeHttpRequests { requests ->
                 requests
                     .requestMatchers(antMatcher(HttpMethod.GET)).permitAll()
+                    .requestMatchers("/livros").authenticated()
+                    .requestMatchers("/emprestimos").authenticated()
+                    .requestMatchers(antMatcher(HttpMethod.POST, "/livros")).hasRole("LIBRARIAN")
+                    .requestMatchers(antMatcher(HttpMethod.PUT, "/emprestimos")).hasRole("LIBRARIAN")
                     .requestMatchers(antMatcher(HttpMethod.POST, "/usuarios")).permitAll()
                     .requestMatchers(mvc.pattern(HttpMethod.POST, "/usuarios/login")).permitAll()
                     .requestMatchers(antMatcher("h2-console/**")).permitAll()
